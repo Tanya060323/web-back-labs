@@ -38,6 +38,49 @@ def index():
 </html>"""
 
 
+@app.route("/lab1")
+def lab1():
+    return """<!doctype html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Лабораторная 1</title>
+        </head>
+        <body>
+            <h1>Лабораторная работа 1</h1>
+            
+            <p>
+            Flask — фреймворк для создания веб-приложений на языке
+            программирования Python, использующий набор инструментов
+            Werkzeug, а также шаблонизатор Jinja2. Относится к категории так
+            называемых микрофреймворков — минималистичных каркасов
+            веб-приложений, сознательно предоставляющих лишь самые ба-
+            зовые возможности.
+            </p>
+            
+            <a href="/">На главную</a>
+
+            <h2>Список роутов:</h2>
+                <ul>
+                    <li><a href="/lab1/web">/lab1/web</a></li>
+                    <li><a href="/lab1/author">/lab1/author</a></li>
+                    <li><a href="/lab1/image">/lab1/image</a></li>
+                    <li><a href="/lab1/counter">/lab1/counter</a></li>
+                    <li><a href="/lab1/counter/clear">/lab1/counter/clear</a></li>
+                    <li><a href="/lab1/info">/lab1/info</a></li>
+                    <li><a href="/lab1/created">/lab1/created</a></li>
+                    <li><a href="/lab1/error/400">/lab1/error/400</a></li>
+                    <li><a href="/lab1/error/401">/lab1/error/401</a></li>
+                    <li><a href="/lab1/error/402">/lab1/error/402</a></li>
+                    <li><a href="/lab1/error/403">/lab1/error/403</a></li>
+                    <li><a href="/lab1/error/405">/lab1/error/405</a></li>
+                    <li><a href="/lab1/error/418">/lab1/error/418</a></li>
+                    <li><a href="/lab1/trigger500">/lab1/trigger500</a></li>
+                </ul>
+        </body>
+    </html>"""
+
+
 @app.route("/lab1/web")
 def web():
     return """<!doctype html> 
