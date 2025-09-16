@@ -8,6 +8,36 @@ def not_found(err):
     return "нет такой страницы", 404
 
 
+@app.route("/")
+@app.route("/index")
+def index():
+    return """<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>НГТУ, ФБ, Лабораторные работы</title>
+    </head>
+    <body>
+        <header>
+            <h1>НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных</h1>
+        </header>
+        
+        <div>
+            <ul>
+                <li><a href="/lab1">Первая лабораторная</a></li>
+            </ul>
+        </div>
+        
+        <footer>
+            <hr>
+            <div>
+                Щегорцова Татьяна Алексеевна, ФБИ-31, 2 курс, 2025 год
+            </div>
+        </footer>
+    </body>
+</html>"""
+
+
 @app.route("/lab1/web")
 def web():
     return """<!doctype html> 
