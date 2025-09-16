@@ -10,13 +10,17 @@ def not_found(err):
 
 @app.route("/lab1/web")
 def web():
-    return """<!doctype html> \
-        <html> \
-            <body> \
-                <h1>web-сервер на flask</h1> \
+    return """<!doctype html> 
+        <html> 
+            <body> 
+                <h1>web-сервер на flask</h1> 
                 <a href="/author">author</a>
-            </body> \
-        </html>"""
+            </body> 
+        </html>""", 200, {
+            "X-Server": "sample",
+            "Content-Type": "text/plain; charset=utf-8"
+        }
+
 
 
 @app.route("/lab1/author")
