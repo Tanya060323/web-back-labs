@@ -185,5 +185,83 @@ def created():
 ''',201
 
 
+@app.route("/lab1/error/400")
+def error400():
+    return '''
+<!doctype html>
+<html> 
+    <body> 
+        <h1>400 Bad Request</h1>
+        <p>Сервер не может обработать запрос из-за неверного синтаксиса.</p>
+    </body> 
+</html>
+''', 400, {'Content-Type': 'text/html; charset=utf-8'}
+
+
+@app.route("/lab1/error/401")
+def error401():
+    return '''
+<!doctype html>
+<html> 
+    <body> 
+        <h1>401 Unauthorized</h1>
+        <p>Требуются учетные данные для доступа к ресурсу.</p>
+    </body> 
+</html>
+''', 401, {'Content-Type': 'text/html; charset=utf-8','WWW-Authenticate': 'Basic realm="Login Required"'}
+
+
+@app.route("/lab1/error/402")
+def error402():
+    return '''
+<!doctype html>
+<html> 
+    <body> 
+        <h1>402 Payment Required</h1>
+        <p>Для доступа к ресурсу требуется оплата.</p>
+    </body> 
+</html>
+''', 402, {'Content-Type': 'text/html; charset=utf-8'}
+
+
+@app.route("/lab1/error/403")
+def error403():
+    return '''
+<!doctype html>
+<html> 
+    <body> 
+        <h1>403 Forbidden</h1>
+        <p>Доступ к запрошенному ресурсу запрещен.</p>
+    </body> 
+</html>
+''', 403, {'Content-Type': 'text/html; charset=utf-8'}
+
+
+@app.route("/lab1/error/405")
+def error405():
+    return '''
+<!doctype html>
+<html> 
+    <body> 
+        <h1>405 Method Not Allowed</h1>
+        <p>Метод, указанный в запросе, не разрешен для данного ресурса.</p>
+    </body> 
+</html>
+''', 405, {'Content-Type': 'text/html; charset=utf-8','Allow': 'GET'}
+
+
+@app.route("/lab1/error/418")
+def error418():
+    return '''
+<!doctype html>
+<html> 
+    <body> 
+        <h1>I'm a teapot</h1>
+        <p>Я чайник</p>
+    </body> 
+</html>
+''', 418, {'Content-Type': 'text/html; charset=utf-8'}
+
+
 
         
