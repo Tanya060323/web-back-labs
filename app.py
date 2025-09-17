@@ -96,7 +96,7 @@ def lab1():
                     <li><a href="/lab1/author">/lab1/author</a></li>
                     <li><a href="/lab1/image">/lab1/image</a></li>
                     <li><a href="/lab1/counter">/lab1/counter</a></li>
-                    <li><a href="/lab1/counter/clear">/lab1/counter/clear</a></li>
+                    <li><a href="/lab1/counter/reset">/lab1/counter/reset</a></li>
                     <li><a href="/lab1/info">/lab1/info</a></li>
                     <li><a href="/lab1/created">/lab1/created</a></li>
                     <li><a href="/lab1/error/400">/lab1/error/400</a></li>
