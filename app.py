@@ -163,7 +163,11 @@ def image():
         </div>
     </body> 
 </html>
-'''
+''', 200, {'Content-Type': 'text/html; charset=utf-8',
+        'Content-Language': 'ru',
+        'X-Developer': 'Shchegorcova Tanya',  
+        'X-Project': 'Flask-Labs',
+}
 
 
 count = 0
