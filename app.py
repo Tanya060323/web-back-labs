@@ -2,11 +2,41 @@ from flask import Flask, url_for, request, redirect
 import datetime
 app = Flask(__name__)
 
+error_log = []
 
 @app.errorhandler(404)
 def not_found(err):
     img_path = url_for('static', filename='404.jpg')
     css_url = url_for('static', filename='404.css')
+
+    client_ip = request.remote_addr
+    access_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    requested_url = request.url
+    user_agent = request.headers.get('User-Agent', 'Неизвестно')
+
+    # Добавляем запись в журнал
+    log_entry = {
+        'ip': client_ip,
+        'time': access_time,
+        'url': requested_url,
+        'user_agent': user_agent
+    }
+    error_log.append(log_entry)
+    
+    # Ограничиваем журнал последними 20 записями
+    if len(error_log) > 20:
+        error_log.pop(0)
+
+    # Формируем HTML для журнала
+    log_html = ""
+    for entry in reversed(error_log):  # Показываем последние записи первыми
+        log_html += f"""
+        <div class="log-entry">
+            <span class="log-time">{entry['time']}</span>
+            <span class="log-ip">Пользователь: {entry['ip']}</span>
+            <span class="log-url">Адрес: {entry['url']}</span>
+        </div>
+        """
 
     return """<!doctype html>
 <html>
@@ -20,6 +50,12 @@ def not_found(err):
             <img src='""" + img_path + """' alt="404" class="image">
             <h1>404</h1>
             <h2>Ой! Страница потерялась</h2>
+
+            <div class="user-info">
+                <p><strong>Ваш IP-адрес:</strong> """ + client_ip + """</p>
+                <p><strong>Время доступа:</strong> """ + access_time + """</p>
+                <p><strong>Запрошенный URL:</strong> """ + requested_url + """</p>
+            </div>
             
             <p>Кажется, мы не можем найти страницу, которую вы ищете.<br>
             Возможно, она переехала или никогда не существовала.</p>
@@ -33,6 +69,11 @@ def not_found(err):
             </div>
             
             <a href="/" class="home-btn">Вернуться на главную</a>
+
+            <div class="journal">
+                <h3>Журнал обращений:</h3>
+                """ + log_html if error_log else '<p>Журнал пуст</p>' + """
+            </div>
         </div>
     </body>
 </html>""", 404
