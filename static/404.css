@@ -65,3 +65,28 @@ p {
     border: 4px solid #ff6b6b;
     margin: 20px 0;
 }
+
+.user-info {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+.user-info p {
+    margin: 5px 0;
+    font-size: 1em;
+}
+
+.journal {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.journal h3 {
+    margin-top: 0;
+    color: #ffe66d;
+    text-align: center;
+}
