@@ -293,5 +293,20 @@ def error418():
 ''', 418, {'Content-Type': 'text/html; charset=utf-8'}
 
 
+@app.route('/lab1/trigger500')
+def trigger_500():
+    return 1 / 0
+
+@app.errorhandler(500)
+def server_error(err):
+    return '''<!doctype html>
+    <html>
+        <body>
+            <h1>500</h1>
+            <p>Внутренняя ошибка сервера. Пожалуйста, попробуйте позже.</p>
+            <p><a href="/">Вернуться на главную</a></p>
+        </body>
+    </html>''', 500
+
 
         
