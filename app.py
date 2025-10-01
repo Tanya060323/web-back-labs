@@ -362,29 +362,51 @@ def a():
 def a2():
     return 'со слэшем'
 
-flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашка']
+flower_list = [
+    {"name": "Роза", "price": 132},
+    {"name": "Тюльпан", "price": 70},
+    {"name": "Незабудка", "price": 173},
+    {"name": "Ромашка", "price": 22}
+]
+
+@app.route('/lab2/flowers')
+def flowers_all():
+    return render_template('flowers.html', flowers=flower_list)
 
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
-    if flower_id >= len(flower_list):
+    if flower_id < 0 or flower_id >= len(flower_list):
         abort(404)
-    else:
-        return "цветок:" + flower_list[flower_id]
+    flower = flower_list[flower_id]
+    return render_template('flower.html', flower=flower, id=flower_id)
 
-@app.route('/lab2/add_flower/<name>')
-def add_flower(name):
-    flower_list.append(name)
-    return f'''
-<!doctype html>
-<html>
-    <body>
-    <h1>Добавлен новый цветок</h1>
-    <p>Название нового цветка: {name} </p>
-    <p>Всего цветов: {len(flower_list)}</p>
-    <p>Полный список: {flower_list}</p>
-    </body>
-</html>
-'''
+@app.route('/lab2/add_flower/<name>/<int:price>')
+def add_flower_with_price(name, price):
+    flower_list.append({"name": name, "price": price})
+    return render_template('flowers.html', name=name, price=price, flowers=flower_list)
+
+@app.route('/lab2/add_flower/')
+def add_flower():
+    name = request.form.get('name', '').strip()
+    price = request.form.get('price', '').strip()
+
+    flower_list.append({"name": name, "price": price})
+    return redirect(url_for('flowers_all'))
+
+@app.route('/lab2/flowers/clear')
+def clear_flowers():
+    global flower_list
+    flower_list = []
+    return render_template('flowers_cleared.html')
+
+@app.route('/lab2/flowers/delete/<int:flower_id>')
+def delete_flower(flower_id):
+    if flower_id < 0 or flower_id >= len(flower_list):
+        abort(404)
+    flower_list.pop(flower_id)
+    return redirect(url_for('flowers_all'))
+
+
 @app.route('/lab2/example')
 def example():
     name = 'Татьяна Щегорцова'
