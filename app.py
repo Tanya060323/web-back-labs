@@ -386,7 +386,7 @@ def add_flower_with_price(name, price):
     flower_list.append({"name": name, "price": price})
     return render_template('flowers.html', name=name, price=price, flowers=flower_list)
 
-@app.route('/lab2/add_flower/')
+@app.route('/lab2/add_flower/', methods=['GET', 'POST'])
 def add_flower():
     name = request.form.get('name', '').strip()
     price = request.form.get('price', '').strip()
