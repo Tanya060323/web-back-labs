@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 2{% endblock %}
+
+{% block main %}
+    <h2 style="text-align: center;">Фрукты</h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+        {% for c in frut %}
+            <div style="width: 280px; padding: 15px; text-align: center; border: 1px solid #eee; border-radius: 10px;">
+                <div style="height: 200px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 15px;">
+                    <img src="{{ url_for('static', filename='frut/' ~ c.image) }}" 
+                         style="max-width: 100%; max-height: 100%; display: block; object-fit: contain;">
+                </div>
+                <h3 style="margin: 10px 0;">{{ c.name }}</h3>
+                <p style="margin: 0; line-height: 1.4;">{{ c.desc }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
