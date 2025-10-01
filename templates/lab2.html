@@ -8,11 +8,35 @@
     <h1>Шаблоны</h1>
     <div>Тема лабораторной - шаблоны. Список сделанных страниц:</div>
     <ol>
-        <li><a href="/lab2/example">example</a></li>
-        <li><a href="/lab2/filters">filters</a></li>
-        <li><a href="/lab2/calc/5/3">calc</a></li>
-        <li><a href="/lab2/books">books</a></li>
-        <li><a href="/lab2/flowers/1">flowers</a></li>
-        <li><a href="/lab2/add_flower/орхидея">add_flower</a></li>
+        <li>
+            <a href="/lab2/example">example</a> 
+        </li>
+        <li>
+            <a href="{{ url_for('a') }}">a</a> 
+        </li>
+        <li>
+            <a href="{{ url_for('a2') }}">a/</a> 
+        </li>
+        <li>
+            <a href="{{ url_for('flowers_all') }}">flowers</a> 
+        </li>
+        <li>
+            <a href="{{ url_for('flowers', flower_id=0) }}">flowers/&lt;id&gt;</a> 
+        </li>
+        <li>
+            <a href="{{ url_for('show_books') }}">books</a> 
+        </li>
+        <li>
+            <a href="{{ url_for('object') }}">object</a>
+        </li>
+        <li>
+            <a href="{{ url_for('filters') }}">filters</a> 
+        </li>
+        <li>
+            <a href="{{ url_for('calc_default') }}">calc/</a> 
+        </li>
+        <li>
+            <a href="{{ url_for('calc_ab', a=3, b=2) }}">calc/&lt;a&gt;/&lt;b&gt;/</a> 
+        </li>
     </ol>
 {% endblock %}
