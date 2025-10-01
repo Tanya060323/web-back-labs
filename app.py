@@ -460,3 +460,25 @@ def calc_ab(a, b):
         a=a, b=b,
         add=add, sub=sub, mul=mul, div=div, power=power
     )
+
+@app.route('/lab2/books/')
+def show_books():
+    books = [
+        {"author": "Джоан Роулинг", "title": "Гарри Поттер и философский камень", "genre": "Фэнтези", "pages": 432},
+        {"author": "Джордж Оруэлл", "title": "1984", "genre": "Антиутопия", "pages": 328},
+        {"author": "Рей Брэдбери", "title": "451 градус по Фаренгейту", "genre": "Научная фантастика", "pages": 256},
+        {"author": "Джон Р. Р. Толкин", "title": "Властелин колец: Братство кольца", "genre": "Фэнтези", "pages": 576},
+        {"author": "Агата Кристи", "title": "Убийство в Восточном экспрессе", "genre": "Детектив", "pages": 320},
+        {"author": "Стивен Кинг", "title": "Оно", "genre": "Ужасы", "pages": 1248},
+        {"author": "Эрих Мария Ремарк", "title": "Три товарища", "genre": "Роман", "pages": 384},
+        {"author": "Пауло Коэльо", "title": "Алхимик", "genre": "Притча", "pages": 208},
+        {"author": "Харпер Ли", "title": "Убить пересмешника", "genre": "Роман", "pages": 416},
+        {"author": "Маргарет Митчелл", "title": "Унесённые ветром", "genre": "Исторический роман", "pages": 1024},
+        {"author": "Артур Конан Дойл", "title": "Приключения Шерлока Холмса", "genre": "Детектив", "pages": 352},
+        {"author": "Дэн Браун", "title": "Код да Винчи", "genre": "Триллер", "pages": 480},
+        {"author": "Сергей Лукьяненко", "title": "Ночной дозор", "genre": "Городское фэнтези", "pages": 448},
+        {"author": "Борис Акунин", "title": "Азазель", "genre": "Исторический детектив", "pages": 304},
+        {"author": "Виктор Пелевин", "title": "Generation П", "genre": "Постмодернизм", "pages": 320}
+    ]
+    return render_template('books.html', books=books)
+
