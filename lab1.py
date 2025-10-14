@@ -234,15 +234,3 @@ def error418():
 @lab1.route('/lab1/trigger500')
 def trigger_500():
     return 1 / 0
-
-
-@lab1.errorhandler(500)
-def server_error(err):
-    return '''<!doctype html>
-    <html>
-        <body>
-            <h1>500</h1>
-            <p>Внутренняя ошибка сервера. Пожалуйста, попробуйте позже.</p>
-            <p><a href="/">Вернуться на главную</a></p>
-        </body>
-    </html>''', 500

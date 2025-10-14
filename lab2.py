@@ -21,7 +21,7 @@ flower_list = [
 
 @lab2.route('/lab2/flowers')
 def flowers_all():
-    return render_template('flowers.html', flowers=flower_list)
+    return render_template('lab2/flowers.html', flowers=flower_list)
 
 
 @lab2.route('/lab2/flowers/<int:flower_id>')
@@ -29,13 +29,13 @@ def flowers(flower_id):
     if flower_id < 0 or flower_id >= len(flower_list):
         abort(404)
     flower = flower_list[flower_id]
-    return render_template('flower.html', flower=flower, id=flower_id)
+    return render_template('lab2/flower.html', flower=flower, id=flower_id)
 
 
 @lab2.route('/lab2/add_flower/<name>/<int:price>')
 def add_flower_with_price(name, price):
     flower_list.append({"name": name, "price": price})
-    return render_template('flowers.html', name=name, price=price, flowers=flower_list)
+    return render_template('lab2/flowers.html', name=name, price=price, flowers=flower_list)
 
 
 @lab2.route('/lab2/add_flower/', methods=['GET', 'POST'])
@@ -44,14 +44,14 @@ def add_flower():
     price = request.form.get('price', '').strip()
 
     flower_list.append({"name": name, "price": price})
-    return redirect(url_for('flowers_all'))
+    return redirect(url_for('lab2/flowers_all'))
 
 
 @lab2.route('/lab2/flowers/clear')
 def clear_flowers():
     global flower_list
     flower_list = []
-    return render_template('flowers_cleared.html')
+    return render_template('lab2/flowers_cleared.html')
 
 
 @lab2.route('/lab2/flowers/delete/<int:flower_id>')
@@ -75,18 +75,18 @@ def example():
         {'name': 'мандарины', 'price': 95},
         {'name': 'манго', 'price': 321}
     ]
-    return render_template('example.html', name=name, number=number, group=group, course=course, fruits=fruits)
+    return render_template('lab2/example.html', name=name, number=number, group=group, course=course, fruits=fruits)
 
 
 @lab2.route('/lab2/')
 def lab():
-    return render_template('lab2.html')
+    return render_template('lab2/lab2.html')
 
 
 @lab2.route('/lab2/filters')
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
-    return render_template('filter.html', phrase = phrase)
+    return render_template('lab2/filter.html', phrase = phrase)
 
 
 @lab2.route('/lab2/calc/')
@@ -116,7 +116,7 @@ def calc_ab(a, b):
     power = a ** b
 
     return render_template(
-        'calc.html',
+        'lab2/calc.html',
         a=a, b=b,
         add=add, sub=sub, mul=mul, div=div, power=power
     )
@@ -141,7 +141,7 @@ def show_books():
         {"author": "Борис Акунин", "title": "Азазель", "genre": "Исторический детектив", "pages": 304},
         {"author": "Виктор Пелевин", "title": "Generation П", "genre": "Постмодернизм", "pages": 320}
     ]
-    return render_template('books.html', books=books)
+    return render_template('lab2/books.html', books=books)
 
 
 @lab2.route('/lab2/object/')
@@ -168,4 +168,4 @@ def object():
         {"name": "Яблоко", "image": "яблоко.jpg", "desc": "Широко распространённое плодовое дерево"},
         {"name": "Виноград", "image": "виноград.jpg", "desc": "Многолетняя лиана с древесным стеблем"}
     ]
-    return render_template('object.html', frut=frut)
+    return render_template('lab2/object.html', frut=frut)
