@@ -5,7 +5,23 @@
 {% block main %}
     <h1>Формы, cookie</h1>
     <div>
-        Привет, <span style="color: {{name_color}}">{{name}}</span>!
+        <div>
+            Привет, 
+                <span style="color: {{ name_color or 'black' }}; font-weight: bold;">
+                    {{ name or 'аноним' }}
+                </span>!
+        </div>
+
+        {% if age %}
+            <div>
+                Возраст: <strong>{{ age }}</strong> лет
+            </div>
+        {% else %}
+            <div>
+                Возраст: <strong>не указан</strong>
+            </div>
+        {% endif %}
+
     </div>
     <div>Список сделанных страниц:</div>
     <ol>
