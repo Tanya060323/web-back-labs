@@ -172,3 +172,87 @@ def ticket():
                          age=age, departure=departure, destination=destination,
                          date=date, insurance=insurance, errors=errors,
                          price=price, ticket_type=ticket_type if not errors and fio else '')
+
+
+@lab3.route('/lab3/search')
+def search():
+    products = [
+        {'name': 'iPhone 13', 'price': 79999, 'brand': 'Apple', 'color': 'black'},
+        {'name': 'Samsung Galaxy S21', 'price': 69999, 'brand': 'Samsung', 'color': 'white'},
+        {'name': 'Google Pixel 6', 'price': 46799, 'brand': 'Google', 'color': 'gray'},
+        {'name': 'Xiaomi Mi 11', 'price': 34899, 'brand': 'Xiaomi', 'color': 'blue'},
+        {'name': 'OnePlus 9', 'price': 27899, 'brand': 'OnePlus', 'color': 'black'},
+        {'name': 'iPhone 12', 'price': 49999, 'brand': 'Apple', 'color': 'red'},
+        {'name': 'Samsung Galaxy A52', 'price': 29999, 'brand': 'Samsung', 'color': 'blue'},
+        {'name': 'Google Pixel 5a', 'price': 32999, 'brand': 'Google', 'color': 'black'},
+        {'name': 'Xiaomi Redmi Note 10', 'price': 19999, 'brand': 'Xiaomi', 'color': 'white'},
+        {'name': 'OnePlus Nord 2', 'price': 78999, 'brand': 'OnePlus', 'color': 'gray'},
+        {'name': 'iPhone SE', 'price': 69999, 'brand': 'Apple', 'color': 'white'},
+        {'name': 'Samsung Galaxy Z Flip', 'price': 89999, 'brand': 'Samsung', 'color': 'purple'},
+        {'name': 'Google Pixel 4a', 'price': 45766, 'brand': 'Google', 'color': 'black'},
+        {'name': 'Xiaomi Poco X3', 'price': 23999, 'brand': 'Xiaomi', 'color': 'blue'},
+        {'name': 'OnePlus 8T', 'price': 45799, 'brand': 'OnePlus', 'color': 'green'},
+        {'name': 'iPhone 11', 'price': 41999, 'brand': 'Apple', 'color': 'yellow'},
+        {'name': 'Samsung Galaxy S20', 'price': 59999, 'brand': 'Samsung', 'color': 'gray'},
+        {'name': 'Google Pixel 4', 'price': 23999, 'brand': 'Google', 'color': 'white'},
+        {'name': 'Xiaomi Mi 10T', 'price': 56799, 'brand': 'Xiaomi', 'color': 'black'},
+        {'name': 'OnePlus 7T', 'price': 45888, 'brand': 'OnePlus', 'color': 'blue'}
+    ]
+    
+    min_price = request.args.get('min_price')
+    max_price = request.args.get('max_price')
+    
+    # Получаем значения из куки, если они есть
+    if not min_price:
+        min_price = request.cookies.get('min_price', '')
+    if not max_price:
+        max_price = request.cookies.get('max_price', '')
+    
+    filtered_products = products
+    search_performed = False
+    
+    if min_price or max_price:
+        search_performed = True
+        try:
+            min_val = float(min_price) if min_price else 0
+            max_val = float(max_price) if max_price else float('inf')
+            
+            # Если пользователь перепутал min и max
+            if min_val > max_val:
+                min_val, max_val = max_val, min_val
+                min_price, max_price = max_price, min_price
+            
+            filtered_products = [
+                p for p in products 
+                if min_val <= p['price'] <= max_val
+            ]
+            
+            # Сохраняем в куки
+            resp = make_response(render_template(
+                'lab3/search.html',
+                products=filtered_products,
+                min_price=min_price,
+                max_price=max_price,
+                search_performed=search_performed
+            ))
+            if min_price:
+                resp.set_cookie('min_price', min_price)
+            if max_price:
+                resp.set_cookie('max_price', max_price)
+            return resp
+            
+        except ValueError:
+            filtered_products = []
+    
+    return render_template('lab3/search.html',
+                         products=filtered_products,
+                         min_price=min_price,
+                         max_price=max_price,
+                         search_performed=search_performed)
+
+@lab3.route('/lab3/reset_search')
+def reset_search():
+    resp = make_response(redirect('/lab3/search'))
+    resp.delete_cookie('min_price')
+    resp.delete_cookie('max_price')
+    return resp
