@@ -118,3 +118,57 @@ def clear_settings():
     resp.delete_cookie('font_size')
     resp.delete_cookie('font_family')
     return resp
+
+
+@lab3.route('/lab3/ticket')
+def ticket():
+    errors = {}
+    
+    fio = request.args.get('fio')
+    shelf = request.args.get('shelf')
+    linen = request.args.get('linen')
+    luggage = request.args.get('luggage')
+    age = request.args.get('age')
+    departure = request.args.get('departure')
+    destination = request.args.get('destination')
+    date = request.args.get('date')
+    insurance = request.args.get('insurance')
+    
+    if not fio:
+        errors['fio'] = 'Заполните поле!'
+    if not shelf:
+        errors['shelf'] = 'Выберите полку!'
+    if not age:
+        errors['age'] = 'Заполните поле!'
+    elif not age.isdigit() or not (1 <= int(age) <= 120):
+        errors['age'] = 'Возраст должен быть от 1 до 120 лет!'
+    if not departure:
+        errors['departure'] = 'Заполните поле!'
+    if not destination:
+        errors['destination'] = 'Заполните поле!'
+    if not date:
+        errors['date'] = 'Заполните поле!'
+    
+    price = 0
+    if not errors and fio:
+        if age and int(age) < 18:
+            price = 700  
+            ticket_type = "Детский билет"
+        else:
+            price = 1000  
+            ticket_type = "Взрослый билет"
+        
+        if shelf in ['lower', 'lower-side']:
+            price += 100
+        if linen == 'on':
+            price += 75
+        if luggage == 'on':
+            price += 250
+        if insurance == 'on':
+            price += 150
+    
+    return render_template('lab3/ticket.html',
+                         fio=fio, shelf=shelf, linen=linen, luggage=luggage,
+                         age=age, departure=departure, destination=destination,
+                         date=date, insurance=insurance, errors=errors,
+                         price=price, ticket_type=ticket_type if not errors and fio else '')

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <h1>Железнодорожный билет</h1>
+    
+    {% if fio and not errors %}
+        <div style="border: 2px solid #333; padding: 20px; margin: 20px 0;">
+            <h2>Билет №{{ range(1000, 9999) | random }}</h2>
+            <p><strong>ФИО пассажира:</strong> {{ fio }}</p>
+            <p><strong>Тип билета:</strong> {{ ticket_type }}</p>
+            <p><strong>Полка:</strong> 
+                {% if shelf == 'lower' %}нижняя
+                {% elif shelf == 'upper' %}верхняя
+                {% elif shelf == 'upper-side' %}верхняя боковая
+                {% elif shelf == 'lower-side' %}нижняя боковая
+                {% endif %}
+            </p>
+            <p><strong>Бельё:</strong> {{ 'Да' if linen == 'on' else 'Нет' }}</p>
+            <p><strong>Багаж:</strong> {{ 'Да' if luggage == 'on' else 'Нет' }}</p>
+            <p><strong>Возраст:</strong> {{ age }}</p>
+            <p><strong>Маршрут:</strong> {{ departure }} → {{ destination }}</p>
+            <p><strong>Дата:</strong> {{ date }}</p>
+            <p><strong>Страховка:</strong> {{ 'Да' if insurance == 'on' else 'Нет' }}</p>
+            <p><strong>Стоимость:</strong> {{ price }} руб.</p>
+        </div>
+        
+        <div>
+            <a href="/lab3/ticket">Оформить новый билет</a>
+        </div>
+    {% else %}
+        <form>
+            <label>ФИО пассажира:</label>
+            <div>
+                <input type="text" name="fio" value="{{ fio or '' }}">
+                <span class="error">{{ errors.fio }}</span>
+            </div>
+
+            <label>Полка:</label>
+            <div>
+                <select name="shelf">
+                    <option value="">Выберите полку</option>
+                    <option value="lower" {{ 'selected' if shelf == 'lower' }}>Нижняя</option>
+                    <option value="upper" {{ 'selected' if shelf == 'upper' }}>Верхняя</option>
+                    <option value="upper-side" {{ 'selected' if shelf == 'upper-side' }}>Верхняя боковая</option>
+                    <option value="lower-side" {{ 'selected' if shelf == 'lower-side' }}>Нижняя боковая</option>
+                </select>
+                <span class="error">{{ errors.shelf }}</span>
+            </div>
+
+            <div>
+                <label style="display: inline-block; margin-right: 20px;">
+                    <input type="checkbox" name="linen" {{ 'checked' if linen == 'on' }}> С бельём
+                </label>
+                
+                <label style="display: inline-block; margin-right: 20px;">
+                    <input type="checkbox" name="luggage" {{ 'checked' if luggage == 'on' }}> С багажом
+                </label>
+                
+                <label style="display: inline-block;">
+                    <input type="checkbox" name="insurance" {{ 'checked' if insurance == 'on' }}> Страховка
+                </label>
+            </div>
+
+            <label>Возраст:</label>
+            <div>
+                <input type="number" name="age" value="{{ age or '' }}" min="1" max="120">
+                <span class="error">{{ errors.age }}</span>
+            </div>
+
+            <label>Пункт выезда:</label>
+            <div>
+                <input type="text" name="departure" value="{{ departure or '' }}">
+                <span class="error">{{ errors.departure }}</span>
+            </div>
+
+            <label>Пункт назначения:</label>
+            <div>
+                <input type="text" name="destination" value="{{ destination or '' }}">
+                <span class="error">{{ errors.destination }}</span>
+            </div>
+
+            <label>Дата поездки:</label>
+            <div>
+                <input type="date" name="date" value="{{ date or '' }}">
+                <span class="error">{{ errors.date }}</span>
+            </div>
+
+            <div>
+                <button type="submit">Оформить билет</button>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}
