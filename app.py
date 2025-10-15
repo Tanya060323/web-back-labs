@@ -14,8 +14,8 @@ error_log = []
 
 @app.errorhandler(404)
 def not_found(err):
-    img_path = url_for('static', filename='404.jpg')
-    css_url = url_for('static', filename='404.css')
+    img_path = url_for('static', filename='lab1/404.jpg')
+    css_url = url_for('static', filename='lab1/404.css')
 
     client_ip = request.remote_addr
     access_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
