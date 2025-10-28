@@ -93,3 +93,23 @@ def power():
     
     result = x1 ** x2
     return render_template('lab4/pow.html', x1=x1, x2=x2, result=result)
+
+
+tree_count = 0
+
+@lab4.route('/lab4/tree', methods = ['GET', 'POST'])
+def tree():
+    global tree_count
+    if request.method == 'GET':
+        return render_template('lab4/tree.html', tree_count=tree_count)
+    
+    operation = request.form.get('operation')
+
+    if operation == 'cut':
+        if tree_count > 0:
+                tree_count -= 1
+    elif operation == 'plant':
+        if tree_count < 15:
+                tree_count += 1
+        
+    return redirect ('/lab4/tree')
