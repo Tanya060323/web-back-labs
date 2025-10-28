@@ -112,7 +112,6 @@ def tree():
         
     return redirect ('/lab4/tree')
 
-
 users = [
     {'login': 'alex', 'password': '123', 'name': 'Александр Сидоров', 'gender': 'male'},
     {'login': 'bob', 'password': '555', 'name': 'Борис Алексеев', 'gender': 'male'},
