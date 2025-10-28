@@ -4,7 +4,8 @@
 
 {% block main %}
     {% if authorized %}
-        <h1>Добро пожаловать, {{ login }}!</h1>
+        <h1>Добро пожаловать, {{ name }}!</h1>
+        <p><b>Ваш пол:</b> {{ gender_text }}</p>
         <div>
             <form action="/lab4/logout" method="post">
                 <button>Выход</button>
@@ -13,20 +14,50 @@
     {% else %}
         <h1>Вход</h1>
         <h2>Пожалуйста, авторизуйтесь</h2>
+        
+        {% if errors %}
+            <div class="error-messages">
+                {% for error in errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% elif error %}
+            <div class="error-messages">
+                <div class="error">{{ error }}</div>
+            </div>
+        {% endif %}
+        
         <form method="post">
             <div>
                 <label for="login">Пользователь:</label>
-                <input type="text" id="login" name="login">        
+                <input type="text" id="login" name="login" value="{{ login or '' }}">        
             </div>
             <div>
                 <label for="password">Пароль:</label>
                 <input type="password" id="password" name="password">
             </div>
-            <div>{{ error }}</div>
             <div>
                 <button type="submit">Войти</button>
                 <button type="reset">Отмена</button>
             </div>
         </form>
     {% endif %}
+
+    <style>
+        .error-messages {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #e81e13;
+            border: 1px solid #efef0d;
+            border-radius: 5px;
+        }
+        
+        .error {
+            color: #f8f6f6;
+            font-weight: bold;
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #580303; 
+        }
+    </style>
 {% endblock %}
