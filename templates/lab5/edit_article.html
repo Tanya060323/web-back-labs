@@ -25,6 +25,13 @@
         </div>
 
         <div>
+            <label>
+                <input type="checkbox" name="is_public" {% if article['is_public'] %}checked{% endif %}>
+                Публичная статья
+            </label>
+        </div>
+
+        <div>
             <button type="submit">Сохранить изменения</button>
             <a href="/lab5/list" class="button-link">Отмена</a>
         </div>
