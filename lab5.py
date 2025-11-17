@@ -372,41 +372,6 @@ def profile():
     return redirect('/lab5/profile')
 
 
-@lab5.route('/lab5/toggle_favorite/<int:article_id>')
-def toggle_favorite(article_id):
-    login = session.get('login')
-    if not login:
-        return redirect('/lab5/login')
-    
-    conn, cur = db_connect()
-
-    if current_app.config['DB_TYPE'] == 'postgres':
-        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
-    else:
-        cur.execute("SELECT id FROM users WHERE login=?;", (login,))
-
-    user = cur.fetchone()
-    if not user:
-        db_close(conn, cur)
-        return redirect('/lab5/login')
-    
-    user_id = user["id"]
-
-    if current_app.config['DB_TYPE'] == 'postgres':
-        cur.execute("SELECT * FROM articles WHERE id=%s AND user_id=%s;", (article_id, user_id))
-    else:
-        cur.execute("SELECT * FROM articles WHERE id=? AND user_id=?;", (article_id, user_id))
-
-    article = cur.fetchone()
-    if article:
-        new_favorite = not article['is_favorite']
-        if current_app.config['DB_TYPE'] == 'postgres':
-            cur.execute("UPDATE articles SET is_favorite=%s WHERE id=%s;", (new_favorite, article_id))
-        else:
-            cur.execute("UPDATE articles SET is_favorite=? WHERE id=?;", (new_favorite, article_id))
-    
-    db_close(conn, cur)
-    return redirect('/lab5/list')
 
 
 
