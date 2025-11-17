@@ -8,16 +8,17 @@
     <link rel="icon" href="{{ url_for('static', filename='lab2/favicons/favicon.ico') }}" type="image/x-icon">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='lab2/favicons/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='lab2/favicons/favicon-16x16.png') }}">
+    <style>
+        .error {
+            color: #ff0000;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+            font-style: italic;
+        }
+    </style>
+    {% block script %}{% endblock%}
 </head>
-<style>
-    .error {
-        color: #ff0000;
-        font-size: 14px;
-        margin-top: 5px;
-        display: block;
-        font-style: italic;
-    }
-</style>
 <body>
     <header>
         WEB-программирование, часть 2. {{ self.lab() }}
