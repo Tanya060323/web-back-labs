@@ -37,6 +37,7 @@ function getOfficeList() {
 
                 const freeButton = document.createElement('button');
                 freeButton.innerText = 'освободить';
+                freeButton.className = 'cancellation-btn';
                 freeButton.onclick = function() { cancellation(office.number) };
                 li.appendChild(freeButton);
             } else if (office.tenant) {
@@ -46,6 +47,7 @@ function getOfficeList() {
 
                 const bookingButton = document.createElement('button');
                 bookingButton.innerText = 'забронировать';
+                bookingButton.className = 'booking-btn';
                 bookingButton.onclick = function() {booking(office.number)};
                 li.appendChild(bookingButton);
             }
@@ -57,7 +59,7 @@ function getOfficeList() {
             totalCostElem.innerText = `Общая стоимость вашей аренды: ${totalCost} руб./мес.`;
         } 
         else {
-            totalCostElem.innerText = 'У вас нет арендованных офисов. Самое время это исправить!';
+            totalCostElem.innerText = 'У вас нет арендованных офисов!';
         }
     });
 }
@@ -146,6 +148,98 @@ document.addEventListener('DOMContentLoaded', function(){
     getOfficeList();
 });
 </script>
+
+<style>
+    h1 {
+    color: #2c5055;
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-align: center;
+    padding-bottom: 10px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#office-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+#office-list li {
+    background: #e8fafc;
+    padding: 15px 20px;
+    border-radius: 0;
+    border-left: 5px solid #8fb1bc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+    box-shadow: 2px 2px 0px #d5e6e8;
+}
+
+#office-list li:hover {
+    border-left-width: 8px;
+    transform: translateX(5px);
+    box-shadow: 4px 4px 0px #b8cfd4;
+}
+
+.booking-btn {
+    padding: 6px 14px;
+    border-radius: 0;
+    border: 1px solid #8f90bc;
+    background-color: transparent;
+    color: #2d2c55;
+    cursor: pointer;
+    font-weight: normal;
+    transition: all 0.2s;
+    margin-left: 10px;
+}
+
+.booking-btn:hover {
+    background-color: #8fa0bc;
+    color: white;
+    border-color: #2c3e55;
+    letter-spacing: 1px;
+}
+
+.cancellation-btn {
+    padding: 6px 14px;
+    border-radius: 0;
+    border: 1px solid #c95f4c;
+    background-color: #fff5f5;
+    color: #c9654c;
+    cursor: pointer;
+    font-weight: normal;
+    transition: all 0.2s;
+    margin-left: 10px;
+}
+
+.cancellation-btn:hover {
+    background-color: #c94c4c;
+    color: white;
+    border-color: #8b0000;
+    letter-spacing: 1px;
+}
+
+#total-cost {
+    text-align: center;
+    padding: 15px;
+    max-width: 500px;
+    margin: 30px auto 0;
+    font-size: 16px;
+    background: #f3f0f8;
+    border: 1px dashed #8f91bc;
+    font-style: italic;
+    color: #292974;
+}
+</style>
+    
 {% endblock %}
 
 {% block main %}
