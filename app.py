@@ -5,6 +5,7 @@ from lab3 import lab3
 from lab4 import lab4
 from lab5 import lab5
 from lab6 import lab6, init_offices_table 
+from lab7 import lab7
 
 import os
 import datetime
@@ -20,6 +21,7 @@ app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 app.register_blueprint(lab5)
 app.register_blueprint(lab6)
+app.register_blueprint(lab7)
 
 with app.app_context():
     init_offices_table()
@@ -36,7 +38,6 @@ def not_found(err):
     requested_url = request.url
     user_agent = request.headers.get('User-Agent', 'Неизвестно')
 
-    # Добавляем запись в журнал
     log_entry = {
         'ip': client_ip,
         'time': access_time,
@@ -45,13 +46,11 @@ def not_found(err):
     }
     error_log.append(log_entry)
     
-    # Ограничиваем журнал последними 20 записями
     if len(error_log) > 20:
         error_log.pop(0)
 
-    # Формируем HTML для журнала
     log_html = ""
-    for entry in reversed(error_log):  # Показываем последние записи первыми
+    for entry in reversed(error_log):  
         log_html += f"""
         <div class="log-entry">
             <span class="log-time">{entry['time']}</span>
@@ -123,6 +122,7 @@ def index():
                 <li><a href="/lab4/">Четвертая лабораторная</a></li>
                 <li><a href="/lab5/">Пятая лабораторная</a></li>
                 <li><a href="/lab6/">Шестая лабораторная</a></li>
+                <li><a href="/lab7/">Седьмая лабораторная</a></li>
             </ul>
         </div>
         
