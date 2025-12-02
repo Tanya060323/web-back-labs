@@ -96,7 +96,17 @@ def put_film(id):
     if id < 0 or id >= len(films):
         abort(404)
     film = request.get_json()
-    film[id] = film
+    films[id] = film
     return films[id]
 
 
+@lab7.route('/lab7/rest-api/films/', methods=['POST'])
+def add_film():
+    film = request.get_json()
+    
+    if not film or 'title' not in film or 'title_ru' not in film or 'year' not in film or 'description' not in film:
+        abort(400, 'Missing required fields')
+    
+    films.append(film)
+    
+    return {'id': len(films) - 1}, 201
