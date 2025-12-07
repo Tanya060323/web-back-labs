@@ -42,7 +42,7 @@ films = [
             проклятием. Когда-то его прапрадед оставил жену, прапрабабку Мигеля, ради мечты, \
             которая теперь не даёт спокойно жить и его праправнуку. С тех пор музыкальная \
             тема в семье стала табу. Мигель обнаруживает, что между ним и его любимым певцом \
-            Эрнесто де ла Крусом, ныне покойным, существует некая связь. Паренёк отправляется \
+            Эрнесто де ла Крусом, ныно покойным, существует некая связь. Паренёк отправляется \
             к своему кумиру в Страну Мёртвых, где встречает души предков. Мигель знакомится \
             там с духом-скелетом по имени Гектор, который становится его проводником. Вдвоём \
             они отправляются на поиски де ла Круса."
@@ -91,11 +91,16 @@ def del_film(id):
     del films[id]
     return '', 204
 
+
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def put_film(id):
     if id < 0 or id >= len(films):
         abort(404)
     film = request.get_json()
+    
+    if not film.get('description') or film['description'].strip() == '':
+        return {'description': 'Заполните описание'}, 400
+    
     films[id] = film
     return films[id]
 
@@ -106,6 +111,9 @@ def add_film():
     
     if not film or 'title' not in film or 'title_ru' not in film or 'year' not in film or 'description' not in film:
         abort(400, 'Missing required fields')
+    
+    if not film.get('description') or film['description'].strip() == '':
+        return {'description': 'Заполните описание'}, 400
     
     films.append(film)
     
