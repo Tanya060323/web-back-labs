@@ -1,4 +1,9 @@
-from flask import Blueprint, render_template, request, abort
+from flask import Blueprint, render_template, request, abort, current_app
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import sqlite3
+from os import path
+from datetime import datetime
 
 lab7 = Blueprint('lab7', __name__)
 
@@ -6,107 +11,209 @@ lab7 = Blueprint('lab7', __name__)
 def main():
     return render_template('lab7/lab7.html')
 
+def db_connect():
+    if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+        conn = psycopg2.connect(
+            host='127.0.0.1',
+            database='tatiana_shegorczova_knowledge_base',  
+            user='tatiana_shegorczova_knowledge_base',           
+            password='123'       
+        )
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+    else:
+        dir_path = path.dirname(path.realpath(__file__))
+        db_path = path.join(dir_path, "database.db") 
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+    
+    return conn, cur
 
-films = [
-    {
-        "title": "Fight Club",
-        "title_ru": "Бойцовский клуб",
-        "year": 1999,
-        "description": "Сотрудник страховой компании страдает хронической бессонницей \
-            и отчаянно пытается вырваться из мучительно скучной жизни. Однажды в \
-            очередной командировке он встречает некоего Тайлера Дёрдена — харизматического \
-            торговца мылом с извращенной философией. Тайлер уверен, что \
-            самосовершенствование — удел слабых, а единственное, ради чего стоит \
-            жить, — саморазрушение. \
-            Проходит немного времени, и вот уже новые друзья лупят друг друга почем зря \
-            на стоянке перед баром, и очищающий мордобой доставляет им высшее блаженство. \
-            Приобщая других мужчин к простым радостям физической жестокости, они основывают \
-            тайный Бойцовский клуб, который начинает пользоваться невероятной популярностью."
-    },
-    {
-        "title": "The Dark Knight",
-        "title_ru": "Темный рыцарь",
-        "year": 2008,
-        "description": "Бэтмен поднимает ставки в войне с криминалом. С помощью лейтенанта \
-            Джима Гордона и прокурора Харви Дента он намерен очистить улицы Готэма от \
-            преступности. Сотрудничество оказывается эффективным, но скоро они обнаружат себя \
-            посреди хаоса, развязанного восходящим криминальным гением, известным напуганным \
-            горожанам под именем Джокер."
-    },
-    {
-        "title": "Coco",
-        "title_ru": "Тайна Коко",
-        "year": 2017,
-        "description": "12-летний Мигель живёт в мексиканской деревушке в семье сапожников \
-            и тайно мечтает стать музыкантом. Тайно, потому что в его семье музыка считается \
-            проклятием. Когда-то его прапрадед оставил жену, прапрабабку Мигеля, ради мечты, \
-            которая теперь не даёт спокойно жить и его праправнуку. С тех пор музыкальная \
-            тема в семье стала табу. Мигель обнаруживает, что между ним и его любимым певцом \
-            Эрнесто де ла Крусом, ныно покойным, существует некая связь. Паренёк отправляется \
-            к своему кумиру в Страну Мёртвых, где встречает души предков. Мигель знакомится \
-            там с духом-скелетом по имени Гектор, который становится его проводником. Вдвоём \
-            они отправляются на поиски де ла Круса."
-    },
-    {
-        "title": "Harry Potter and the Sorcerer's Stone",
-        "title_ru": "Гарри Поттер и философский камень",
-        "year": 2001,
-        "description": "Жизнь десятилетнего Гарри Поттера нельзя назвать сладкой: родители умерли, \
-            едва ему исполнился год, а от дяди и тёти, взявших сироту на воспитание, достаются лишь \
-            тычки да подзатыльники. Но в одиннадцатый день рождения Гарри всё меняется. Странный \
-            гость, неожиданно появившийся на пороге, приносит письмо, из которого мальчик узнаёт, \
-            что на самом деле он - волшебник и зачислен в школу магии под названием Хогвартс. А \
-            уже через пару недель Гарри будет мчаться в поезде Хогвартс-экспресс навстречу новой \
-            жизни, где его ждут невероятные приключения, верные друзья и самое главное — ключ к \
-            разгадке тайны смерти его родителей."
-    },
-    {
-        "title": "The Matrix",
-        "title_ru": "Матрица",
-        "year": 1999,
-        "description": "Жизнь Томаса Андерсона разделена на две части: днём он — самый обычный \
-            офисный работник, получающий нагоняи от начальства, а ночью превращается в хакера \
-            по имени Нео, и нет места в сети, куда он бы не смог проникнуть. Но однажды всё \
-            меняется. Томас узнаёт ужасающую правду о реальности."
-    },
-]
+def db_close(conn, cur):
+    conn.commit()
+    cur.close()
+    conn.close()
 
+def get_current_year():
+    return datetime.now().year
+
+def ensure_films_data():
+    """Убеждается, что в таблице films есть данные"""
+    conn, cur = db_connect()
+    
+    try:
+        # Проверяем, есть ли данные в таблице
+        if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+            cur.execute("SELECT COUNT(*) as count FROM films;")
+        else:
+            cur.execute("SELECT COUNT(*) as count FROM films;")
+        
+        count_result = cur.fetchone()
+        count = count_result['count'] if isinstance(count_result, dict) else count_result[0]
+        
+        # Если таблица пустая, добавляем данные
+        if count == 0:
+            initial_films = [
+                {
+                    "title": "Fight Club",
+                    "title_ru": "Бойцовский клуб",
+                    "year": 1999,
+                    "description": "Сотрудник страховой компании страдает хронической бессонницей и отчаянно пытается вырваться из мучительно скучной жизни. Однажды в очередной командировке он встречает некоего Тайлера Дёрдена — харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а единственное, ради чего стоит жить, — саморазрушение. Проходит немного времени, и вот уже новые друзья лупят друг друга почем зря на стоянке перед баром, и очищающий мордобой доставляет им высшее блаженство. Приобщая других мужчин к простым радостям физической жестокости, они основывают тайный Бойцовский клуб, который начинает пользоваться невероятной популярностью."
+                },
+                {
+                    "title": "The Dark Knight",
+                    "title_ru": "Темный рыцарь",
+                    "year": 2008,
+                    "description": "Бэтмен поднимает ставки в войне с криминалом. С помощью лейтенанта Джима Гордона и прокурора Харви Дента он намерен очистить улицы Готэма от преступности. Сотрудничество оказывается эффективным, но скоро они обнаружат себя посреди хаоса, развязанного восходящим криминальным гением, известным напуганным горожанам под именем Джокер."
+                },
+                {
+                    "title": "Coco",
+                    "title_ru": "Тайна Коко",
+                    "year": 2017,
+                    "description": "12-летний Мигель живёт в мексиканской деревушке в семье сапожников и тайно мечтает стать музыкантом. Тайно, потому что в его семье музыка считается проклятием. Когда-то его прапрадед оставил жену, прапрабабку Мигеля, ради мечты, которая теперь не даёт спокойно жить и его праправнуку. С тех пор музыкальная тема в семье стала табу. Мигель обнаруживает, что между ним и его любимым певцом Эрнесто де ла Крусом, ныно покойным, существует некая связь. Паренёк отправляется к своему кумиру в Страну Мёртвых, где встречает души предков. Мигель знакомится там с духом-скелетом по имени Гектор, который становится его проводником. Вдвоём они отправляются на поиски де ла Круса."
+                },
+                {
+                    "title": "Harry Potter and the Sorcerer's Stone",
+                    "title_ru": "Гарри Поттер и философский камень",
+                    "year": 2001,
+                    "description": "Жизнь десятилетнего Гарри Поттера нельзя назвать сладкой: родители умерли, едва ему исполнился год, а от дяди и тёти, взявших сироту на воспитание, достаются лишь тычки да подзатыльники. Но в одиннадцатый день рождения Гарри всё меняется. Странный гость, неожиданно появившийся на пороге, приносит письмо, из которого мальчик узнаёт, что на самом деле он - волшебник и зачислен в школу магии под названием Хогвартс. А уже через пару недель Гарри будет мчаться в поезде Хогвартс-экспресс навстречу новой жизни, где его ждут невероятные приключения, верные друзья и самое главное — ключ к разгадке тайны смерти его родителей."
+                },
+                {
+                    "title": "The Matrix",
+                    "title_ru": "Матрица",
+                    "year": 1999,
+                    "description": "Жизнь Томаса Андерсона разделена на две части: днём он — самый обычный офисный работник, получающий нагоняи от начальства, а ночью превращается в хакера по имени Нео, и нет места в сети, куда он бы не смог проникнуть. Но однажды всё меняется. Томас узнаёт ужасающую правду о реальности."
+                },
+            ]
+            
+            for film in initial_films:
+                if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+                    cur.execute("""
+                        INSERT INTO films (title, title_ru, year, description) 
+                        VALUES (%s, %s, %s, %s);
+                    """, (film['title'], film['title_ru'], film['year'], film['description']))
+                else:
+                    cur.execute("""
+                        INSERT INTO films (title, title_ru, year, description) 
+                        VALUES (?, ?, ?, ?);
+                    """, (film['title'], film['title_ru'], film['year'], film['description']))
+    finally:
+        db_close(conn, cur)
 
 @lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
-    return films
-
+    # Перед получением фильмов проверяем, что данные есть
+    ensure_films_data()
+    
+    conn, cur = db_connect()
+    
+    if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+        cur.execute("SELECT * FROM films ORDER BY id;")
+    else:
+        cur.execute("SELECT * FROM films ORDER BY id;")
+    
+    films = cur.fetchall()
+    db_close(conn, cur)
+    
+    films_list = []
+    for film in films:
+        films_list.append(dict(film))
+    
+    return films_list
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['GET'])
 def get_film(id):
-    if id < 0 or id >= len(films):
+    conn, cur = db_connect()
+    
+    if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+        cur.execute("SELECT * FROM films WHERE id = %s;", (id,))
+    else:
+        cur.execute("SELECT * FROM films WHERE id = ?;", (id,))
+    
+    film = cur.fetchone()
+    db_close(conn, cur)
+    
+    if not film:
         abort(404)
-    return films[id]
-
+    
+    return dict(film)
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
 def del_film(id):
-    if id < 0 or id >= len(films):
+    conn, cur = db_connect()
+    
+    if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+        cur.execute("SELECT * FROM films WHERE id = %s;", (id,))
+    else:
+        cur.execute("SELECT * FROM films WHERE id = ?;", (id,))
+    
+    film = cur.fetchone()
+    
+    if not film:
+        db_close(conn, cur)
         abort(404)
-    del films[id]
+    
+    if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+        cur.execute("DELETE FROM films WHERE id = %s;", (id,))
+    else:
+        cur.execute("DELETE FROM films WHERE id = ?;", (id,))
+    
+    db_close(conn, cur)
     return '', 204
-
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def put_film(id):
-    if id < 0 or id >= len(films):
-        abort(404)
     film = request.get_json()
+    
+    errors = {}
+    
+    if not film.get('title_ru') or film['title_ru'].strip() == '':
+        errors['title_ru'] = 'Заполните русское название'
+    
+    if (not film.get('title_ru') or film['title_ru'].strip() == '') and \
+       (not film.get('title') or film['title'].strip() == ''):
+        errors['title'] = 'Заполните оригинальное название'
     
     if not film.get('title') or film['title'].strip() == '':
         film['title'] = film['title_ru']
     
-    if not film.get('description') or film['description'].strip() == '':
-        return {'description': 'Заполните описание'}, 400
+    if not film.get('year'):
+        errors['year'] = 'Заполните год'
+    else:
+        try:
+            year = int(film['year'])
+            current_year = get_current_year()
+            if year < 1895 or year > current_year:
+                errors['year'] = f'Год должен быть от 1895 до {current_year}'
+        except:
+            errors['year'] = 'Год должен быть числом'
     
-    films[id] = film
-    return films[id]
-
+    if not film.get('description') or film['description'].strip() == '':
+        errors['description'] = 'Заполните описание'
+    elif len(film['description']) > 2000:
+        errors['description'] = 'Описание не должно превышать 2000 символов'
+    
+    if errors:
+        return errors, 400
+    
+    conn, cur = db_connect()
+    
+    if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+        cur.execute("""
+            UPDATE films 
+            SET title = %s, title_ru = %s, year = %s, description = %s 
+            WHERE id = %s;
+        """, (film['title'], film['title_ru'], film['year'], film['description'], id))
+    else:
+        cur.execute("""
+            UPDATE films 
+            SET title = ?, title_ru = ?, year = ?, description = ? 
+            WHERE id = ?;
+        """, (film['title'], film['title_ru'], film['year'], film['description'], id))
+    
+    db_close(conn, cur)
+    
+    return get_film(id)
 
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def add_film():
@@ -114,13 +221,56 @@ def add_film():
     
     if not film or 'title' not in film or 'title_ru' not in film or 'year' not in film or 'description' not in film:
         abort(400, 'Missing required fields')
+
+    errors = {}
+    
+    if not film.get('title_ru') or film['title_ru'].strip() == '':
+        errors['title_ru'] = 'Заполните русское название'
+    
+    if (not film.get('title_ru') or film['title_ru'].strip() == '') and \
+       (not film.get('title') or film['title'].strip() == ''):
+        errors['title'] = 'Заполните оригинальное название'
     
     if not film.get('title') or film['title'].strip() == '':
         film['title'] = film['title_ru']
     
+    if not film.get('year'):
+        errors['year'] = 'Заполните год'
+    else:
+        try:
+            year = int(film['year'])
+            current_year = get_current_year()
+            if year < 1895 or year > current_year:
+                errors['year'] = f'Год должен быть от 1895 до {current_year}'
+        except:
+            errors['year'] = 'Год должен быть числом'
+    
     if not film.get('description') or film['description'].strip() == '':
-        return {'description': 'Заполните описание'}, 400
+        errors['description'] = 'Заполните описание'
+    elif len(film['description']) > 2000:
+        errors['description'] = 'Описание не должно превышать 2000 символов'
     
-    films.append(film)
+    if errors:
+        return errors, 400
     
-    return {'id': len(films) - 1}, 201
+    conn, cur = db_connect()
+    
+    if current_app.config.get('DB_TYPE', 'postgres') == 'postgres':
+        cur.execute("""
+            INSERT INTO films (title, title_ru, year, description) 
+            VALUES (%s, %s, %s, %s) RETURNING id;
+        """, (film['title'], film['title_ru'], film['year'], film['description']))
+        
+        result = cur.fetchone()
+        new_id = result['id']
+    else:
+        cur.execute("""
+            INSERT INTO films (title, title_ru, year, description) 
+            VALUES (?, ?, ?, ?);
+        """, (film['title'], film['title_ru'], film['year'], film['description']))
+        
+        new_id = cur.lastrowid
+    
+    db_close(conn, cur)
+    
+    return {'id': new_id}, 201
