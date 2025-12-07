@@ -98,6 +98,9 @@ def put_film(id):
         abort(404)
     film = request.get_json()
     
+    if not film.get('title') or film['title'].strip() == '':
+        film['title'] = film['title_ru']
+    
     if not film.get('description') or film['description'].strip() == '':
         return {'description': 'Заполните описание'}, 400
     
@@ -111,6 +114,9 @@ def add_film():
     
     if not film or 'title' not in film or 'title_ru' not in film or 'year' not in film or 'description' not in film:
         abort(400, 'Missing required fields')
+    
+    if not film.get('title') or film['title'].strip() == '':
+        film['title'] = film['title_ru']
     
     if not film.get('description') or film['description'].strip() == '':
         return {'description': 'Заполните описание'}, 400
