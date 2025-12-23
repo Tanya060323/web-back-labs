@@ -7,13 +7,11 @@
     
     <h1>Список статей</h1>
 
-    <!-- Поиск -->
     <form action="/lab8/articles/" method="post" class="search-form-inline">
         <input type="text" name="search_query" value="{{ search_query }}" placeholder="Поиск...">
         <button type="submit">Найти</button>
     </form>
 
-    <!-- Мои статьи -->
     {% if is_authenticated and my_articles %}
         <h2 class="section-title">Мои статьи</h2>
         <div class="articles-list">
@@ -21,31 +19,23 @@
                 <div class="article-item my-article">
                     <h3>{{ article.title }}</h3>
                     <p>{{ article.article_text }}</p>
-                    <div class="article-info">
-                        <span>Публичная: {% if article.is_public %}Да{% else %}Нет{% endif %}</span>
-                    </div>
                     <div class="article-actions">
                         <a href="/lab8/edit/{{ article.id }}" class="button-link">Редактировать</a>
-                        <a href="/lab8/delete/{{ article.id }}" 
-                           class="button-link delete-btn" 
-                           onclick="return confirm('Удалить статью?')">Удалить</a>
+                        <a href="/lab8/delete/{{ article.id }}" class="button-link delete-btn" 
+                           onclick="return confirm('Удалить?')">Удалить</a>
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 
-    <!-- Публичные статьи -->
     {% if public_articles %}
         <h2 class="section-title">Публичные статьи</h2>
         <div class="articles-list">
-            {% for item in public_articles %}
+            {% for article in public_articles %}
                 <div class="article-item public-article">
-                    <h3>{{ item.article.title }}</h3>
-                    <p>{{ item.article.article_text }}</p>
-                    <div class="article-info">
-                        <span>Автор: <strong>{{ item.author }}</strong></span>
-                    </div>
+                    <h3>{{ article.title }}</h3>
+                    <p>{{ article.article_text }}</p>
                 </div>
             {% endfor %}
         </div>

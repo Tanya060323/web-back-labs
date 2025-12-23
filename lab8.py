@@ -3,6 +3,7 @@ from db import db
 from db.models import users, articles
 from flask_login import login_user, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import or_
 
 lab8 = Blueprint('lab8', __name__)
 
@@ -72,20 +73,21 @@ def login():
 
 @lab8.route('/lab8/articles/', methods=['GET', 'POST'])
 def article_list():
-    search_query = request.form.get('search_query', '')
+    search_query = request.form.get('search_query', '').strip()
     
     if current_user.is_authenticated:
         if search_query:
-            search_pattern = f'%{search_query}%'
             my_articles = articles.query.filter(
                 articles.login_id == current_user.id,
-                (articles.title.ilike(search_pattern) | articles.article_text.ilike(search_pattern))
+                or_(articles.title.ilike(f'%{search_query}%'), 
+                    articles.article_text.ilike(f'%{search_query}%'))
             ).all()
             
             public_articles = articles.query.filter(
                 articles.is_public == True,
                 articles.login_id != current_user.id,
-                (articles.title.ilike(search_pattern) | articles.article_text.ilike(search_pattern))
+                or_(articles.title.ilike(f'%{search_query}%'), 
+                    articles.article_text.ilike(f'%{search_query}%'))
             ).all()
         else:
             my_articles = articles.query.filter_by(login_id=current_user.id).all()
@@ -94,41 +96,26 @@ def article_list():
                 articles.login_id != current_user.id
             ).all()
         
-        public_with_authors = []
-        for article in public_articles:
-            author = users.query.filter_by(id=article.login_id).first()
-            public_with_authors.append({
-                'article': article,
-                'author': author.login if author else 'Неизвестный'
-            })
-        
         return render_template('lab8/articles.html', 
                              my_articles=my_articles,
-                             public_articles=public_with_authors,
+                             public_articles=public_articles,
                              is_authenticated=True,
                              search_query=search_query)
     else:
         if search_query:
-            search_pattern = f'%{search_query}%'
             all_public = articles.query.filter(
                 articles.is_public == True,
-                (articles.title.ilike(search_pattern) | articles.article_text.ilike(search_pattern))
+                or_(articles.title.ilike(f'%{search_query}%'), 
+                    articles.article_text.ilike(f'%{search_query}%'))
             ).all()
         else:
             all_public = articles.query.filter_by(is_public=True).all()
         
-        public_with_authors = []
-        for article in all_public:
-            author = users.query.filter_by(id=article.login_id).first()
-            public_with_authors.append({
-                'article': article,
-                'author': author.login if author else 'Неизвестный'
-            })
-        
         return render_template('lab8/articles.html',
-                             public_articles=public_with_authors,
+                             public_articles=all_public,
                              is_authenticated=False,
                              search_query=search_query)
+
 
 
 @lab8.route('/lab8/logout')
