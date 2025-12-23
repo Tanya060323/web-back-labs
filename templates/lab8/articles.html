@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='lab8/lab8.css') }}">
+
+    {% if articles %}
+    <div class="articles-list">
+        {% for article in articles %}
+            <div class="article-item">
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.article_text }}</p>
+                <div class="article-info">
+                    <span>Публичная: {% if article.is_public %}Да{% else %}Нет{% endif %}</span>
+                </div>
+                <div class="article-actions">
+                    <a href="/lab8/edit/{{ article.id }}" class="button-link">Редактировать</a>
+                    <a href="/lab8/delete/{{ article.id }}" class="button-link delete-btn">Удалить</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>У вас пока нет статей. <a href="/lab8/create">Создайте первую!</a></p>
+{% endif %}
+{% endblock %}
