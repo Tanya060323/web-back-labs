@@ -3,6 +3,8 @@
 {% block lab %}Лабораторная работа 8{% endblock %}
 
 {% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='lab8/lab8.css') }}">
+
     <h1>Вход в систему</h1>
 
     {% if error %}
@@ -21,6 +23,13 @@
                 Пароль: <input type="password" name="password">
             </label>
         </div>
+
+        <div>
+            <label>
+                <input type="checkbox" name="remember"> Запомнить меня
+            </label>
+        </div>
+
 
         <button type="submit">Вход</button>
     </form>

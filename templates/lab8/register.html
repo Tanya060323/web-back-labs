@@ -3,6 +3,8 @@
 {% block lab %}Лабораторная работа 8{% endblock %}
 
 {% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='lab8/lab8.css') }}">
+
     <h1>Регистрация</h1>
 
     {% if error %}
