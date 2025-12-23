@@ -70,11 +70,65 @@ def login():
                            error = 'Ошибка входа: логин и/или пароль неверны')
 
 
-@lab8.route('/lab8/articles/')
-@login_required
+@lab8.route('/lab8/articles/', methods=['GET', 'POST'])
 def article_list():
-    user_articles = articles.query.filter_by(login_id=current_user.id).all()
-    return render_template('lab8/articles.html', articles=user_articles)
+    search_query = request.form.get('search_query', '')
+    
+    if current_user.is_authenticated:
+        if search_query:
+            search_pattern = f'%{search_query}%'
+            my_articles = articles.query.filter(
+                articles.login_id == current_user.id,
+                (articles.title.ilike(search_pattern) | articles.article_text.ilike(search_pattern))
+            ).all()
+            
+            public_articles = articles.query.filter(
+                articles.is_public == True,
+                articles.login_id != current_user.id,
+                (articles.title.ilike(search_pattern) | articles.article_text.ilike(search_pattern))
+            ).all()
+        else:
+            my_articles = articles.query.filter_by(login_id=current_user.id).all()
+            public_articles = articles.query.filter(
+                articles.is_public == True,
+                articles.login_id != current_user.id
+            ).all()
+        
+        public_with_authors = []
+        for article in public_articles:
+            author = users.query.filter_by(id=article.login_id).first()
+            public_with_authors.append({
+                'article': article,
+                'author': author.login if author else 'Неизвестный'
+            })
+        
+        return render_template('lab8/articles.html', 
+                             my_articles=my_articles,
+                             public_articles=public_with_authors,
+                             is_authenticated=True,
+                             search_query=search_query)
+    else:
+        if search_query:
+            search_pattern = f'%{search_query}%'
+            all_public = articles.query.filter(
+                articles.is_public == True,
+                (articles.title.ilike(search_pattern) | articles.article_text.ilike(search_pattern))
+            ).all()
+        else:
+            all_public = articles.query.filter_by(is_public=True).all()
+        
+        public_with_authors = []
+        for article in all_public:
+            author = users.query.filter_by(id=article.login_id).first()
+            public_with_authors.append({
+                'article': article,
+                'author': author.login if author else 'Неизвестный'
+            })
+        
+        return render_template('lab8/articles.html',
+                             public_articles=public_with_authors,
+                             is_authenticated=False,
+                             search_query=search_query)
 
 
 @lab8.route('/lab8/logout')
