@@ -2,8 +2,182 @@
 
 {% block lab %}Лабораторная работа 9{% endblock %}
 
-{% block script %}{% endblock %}
+{% block script %}
+    <script src="{{ url_for('static', filename='lab9/main.js') }}"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #1a472a 0%, #2e8b57 50%, #70da4d 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fefefe;
+            font-size: 42px;
+            margin: 20px 0;
+        }
+
+        .info {
+            background: rgba(0, 72, 5, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 0 auto 30px;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .info p {
+            font-size: 18px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .info a {
+            color: #d63031;
+            text-decoration: underline;
+        }
+
+        button {
+            background: #d63031;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background: #c0392b;
+        }
+
+        .area {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            margin: 0 auto;
+        }
+
+        .box {
+            position: absolute;         
+            width: 100px;               
+            height: 100px;              
+            cursor: pointer;             
+            background-size: cover;      
+            background-position: center; 
+            border-radius: 10px;         
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
+        }
+
+        .box:hover {
+            transform: scale(1.1);
+        }
+
+
+        .box.locked::after {
+            content: "🔒";
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            font-size: 30px;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .box.opened {
+            opacity: 0.3;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+            background: transparent; 
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+        }
+
+        .modal-box {
+            background: #902701;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close {
+            color: #fff;
+            float: right;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #ddd;
+        }
+
+        .modal h2 {
+            color: #fff;
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        .modal img {
+            display: block;
+            max-width: 100%;
+            max-height: 400px;
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+    </style>
+{% endblock %}
 
 {% block main %}
-    <h1>Поздравления</h1>
+    <div class="container">
+        <h1>Новогодние подарки</h1>
+        
+        <div class="info">
+            <p>Осталось неоткрытых коробок: <span id="count">{{ unopened }}</span></p>
+            
+            {% if login %}
+                <p>Добро пожаловать, {{ login }}!</p>
+                <button onclick="resetBoxes()">Дед Мороз</button>
+                <button onclick="location.href='/lab9/logout'">Выйти</button>
+            {% else %}
+                <p><a href="/lab5/login">Войдите</a>, чтобы получить доступ к особым подаркам!</p>
+            {% endif %}
+        </div>
+
+        <div id="area" class="area"></div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-box">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="text"></h2>
+            <img id="img" src="" alt="Подарок">
+        </div>
+    </div>
 {% endblock %}
+
+

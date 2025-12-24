@@ -107,7 +107,10 @@ def login():
     session['login'] = login
     session['user_id'] = user['id']
     db_close(conn, cur)
+    
     return render_template('lab5/success_login.html', login=login)
+    
+
 
 
 @lab5.route('/lab5/create', methods = ['GET', 'POST'])
