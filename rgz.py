@@ -14,41 +14,6 @@ rgz = Blueprint('rgz', __name__)
 import sqlite3
 from os import path
 
-# Путь к базе данных
-dir_path = path.dirname(path.realpath(__file__))
-db_path = path.join(dir_path, "database.db")
-
-# Подключаемся (если файла нет, он создастся)
-conn = sqlite3.connect(db_path)
-cur = conn.cursor()
-
-# Создаем таблицу users
-cur.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    login TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    real_name TEXT NOT NULL,
-    is_admin INTEGER DEFAULT 0
-);
-""")
-
-# Создаем таблицу recipes
-cur.execute("""
-CREATE TABLE IF NOT EXISTS recipes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    ingredients TEXT NOT NULL,
-    instructions TEXT NOT NULL,
-    image_url TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-""")
-
-conn.commit()
-conn.close()
 
 UPLOAD_FOLDER = 'static/rgz/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
