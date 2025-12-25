@@ -369,38 +369,7 @@
     background-color: #4ca6a1;
 }
 
-/* Адаптивность */
-@media (max-width: 968px) {
-    .recipe-card {
-        flex-direction: column;
-    }
-    
-    .recipe-image-container {
-        width: 100%;
-        height: 250px;
-    }
-}
 
-@media (max-width: 768px) {
-    .site-header {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .header-auth {
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    .search-row {
-        flex-direction: column;
-    }
-    
-    .search-row input {
-        width: 100%;
-    }
-}
 
 .form-buttons {
     display: flex;
