@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block lab %}РГЗ - Редактировать рецепт{% endblock %}
+
+{% block main %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='rgz/rgz.css') }}">
+
+    <div class="rgz-form">
+        <h1>Редактирование рецепта</h1>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Название рецепта:</label>
+                <input type="text" 
+                       id="title" 
+                       name="title" 
+                       maxlength="200" 
+                       value="{{ recipe['title'] }}" 
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="ingredients">Ингредиенты:</label>
+                <textarea id="ingredients" 
+                          name="ingredients" 
+                          rows="5" 
+                          required>{{ recipe['ingredients'] }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="instructions">Шаги приготовления:</label>
+                <textarea id="instructions" 
+                          name="instructions" 
+                          rows="8" 
+                          required>{{ recipe['instructions'] }}</textarea>
+            </div>
+
+            {% if recipe['image_url'] %}
+                <div class="form-group">
+                    <label>Текущее изображение:</label>
+                    <img src="{{ recipe['image_url'] }}" alt="{{ recipe['title'] }}" style="max-width: 300px; border-radius: 8px; margin-top: 10px;">
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="image">Изменить изображение:</label>
+                <input type="file" 
+                       id="image" 
+                       name="image" 
+                       accept="image/*">
+                <small>Загрузите новое фото, если хотите заменить текущее</small>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="form-btn">Сохранить изменения</button>
+                <a href="/rgz/recipes" class="btn-cancel">Отмена</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+

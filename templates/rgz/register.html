@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block lab %}Регистрация{% endblock %}
+
+{% block main %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='rgz/rgz.css') }}">
+
+    <div class="rgz-form">
+        <h1>Регистрация</h1>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form action="/rgz/register" method="post">
+            <div class="form-group">
+                <label for="real_name">Ваше имя:</label>
+                <input type="text" id="real_name" name="real_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="login">Логин:</label>
+                <input type="text" id="login" name="login" required>
+                <small>От 3 до 30 символов. Только латинские буквы, цифры и знаки препинания</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
+                <small>Минимум 5 символов</small>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="form-btn">Зарегистрироваться</button>
+                <a href="/rgz/recipes" class="btn-cancel">Отмена</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+

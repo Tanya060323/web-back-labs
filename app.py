@@ -15,7 +15,7 @@ from lab6 import lab6, init_offices_table
 from lab7 import lab7
 from lab8 import lab8
 from lab9 import lab9
-
+from rgz import rgz
 
 import datetime
 app = Flask(__name__)
@@ -59,6 +59,7 @@ app.register_blueprint(lab6)
 app.register_blueprint(lab7)
 app.register_blueprint(lab8)
 app.register_blueprint(lab9)
+app.register_blueprint(rgz)
 
 with app.app_context():
     init_offices_table()
@@ -162,6 +163,7 @@ def index():
                 <li><a href="/lab7/">Седьмая лабораторная</a></li>
                 <li><a href="/lab8/">Восьмая лабораторная</a></li>
                 <li><a href="/lab9/">Девятая лабораторная</a></li>
+                <li><a href="/rgz/">Расчетно-графическое задание</a></li>
             </ul>
         </div>
         

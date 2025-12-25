@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block lab %}Книга рецептов{% endblock %}
+
+{% block main %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='rgz/rgz.css') }}">
+
+    <div class="rgz-container">
+        <div class="site-header">
+            <h1 class="site-title">Книга рецептов</h1>
+            
+            <div class="header-auth">
+                {% if login %}
+                    <span class="user-greeting">
+                        Пользователь: <strong>{{ login }}</strong>
+                        {% if is_admin %}
+                            <span class="admin-badge">(Администратор)</span>
+                        {% endif %}
+                    </span>
+                    
+                    {% if is_admin %}
+                        <a href="/rgz/create_recipe" class="btn-header btn-create">Создать рецепт</a>
+                    {% endif %}
+                    
+                    <a href="/rgz/logout" class="btn-header btn-logout">Выход</a>
+                {% else %}
+                    <a href="/rgz/login" class="btn-header">Вход</a>
+                    <a href="/rgz/register" class="btn-header">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="search-form">
+            <h2>Поиск рецептов</h2>
+            <form action="/rgz/recipes" method="get">
+                <div class="search-row">
+                    <input type="text" 
+                           name="search_title" 
+                           placeholder="Поиск по названию..." 
+                           value="{{ search_title }}">
+                    <input type="text" 
+                           name="search_ingredients" 
+                           placeholder="Поиск по ингредиентам (через запятую)..." 
+                           value="{{ search_ingredients }}">
+                </div>
+
+                <div class="search-mode">
+                    <label>
+                        <input type="radio" 
+                               name="search_mode" 
+                               value="any" 
+                               {% if search_mode == 'any' %}checked{% endif %}>
+                        Хотя бы один ингредиент
+                    </label>
+                    <label>
+                        <input type="radio" 
+                               name="search_mode" 
+                               value="all" 
+                               {% if search_mode == 'all' %}checked{% endif %}>
+                        Все ингредиенты
+                    </label>
+                </div>
+
+                <div class="search-buttons">
+                    <button type="submit" class="btn-search">Найти</button>
+                    <a href="/rgz/recipes" class="btn-reset">Сбросить</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="recipes-header">
+            <h2>Список рецептов</h2>
+        </div>
+
+        {% if recipes %}
+            <div class="recipes-list">
+                {% for recipe in recipes %}
+                    <div class="recipe-card">
+                        <div class="recipe-image-container">
+                            {% if recipe['image_url'] %}
+                                <img src="{{ recipe['image_url'] }}" alt="{{ recipe['title'] }}" class="recipe-image">
+                            {% else %}
+                                <div class="recipe-image" style="display: flex; align-items: center; justify-content: center; background-color: #ecf0f1; color: #bdc3c7; font-size: 18px;">
+                                    Нет изображения
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="recipe-content">
+                            <h3 class="recipe-title">{{ recipe['title'] }}</h3>
+                            
+                            <div class="recipe-ingredients">
+                                <strong>Ингредиенты:</strong><br>
+                                {{ recipe['ingredients'] }}
+                            </div>
+
+                            <div class="recipe-instructions">
+                                <strong>Приготовление:</strong><br>
+                                {{ recipe['instructions'] }}
+                            </div>
+
+                            {% if is_admin %}
+                                <div class="recipe-actions">
+                                    <a href="/rgz/edit_recipe/{{ recipe['id'] }}" class="btn-edit">Редактировать</a>
+                                    <form action="/rgz/delete_recipe/{{ recipe['id'] }}" method="POST" style="flex: 1; margin: 0;">
+                                        <button type="submit" 
+                                                class="btn-delete" 
+                                                onclick="return confirm('Вы уверены, что хотите удалить этот рецепт?');"
+                                                style="width: 100%;">
+                                            Удалить
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-recipes">
+                <p>Рецепты не найдены</p>
+                {% if search_title or search_ingredients %}
+                    <p style="margin-top: 10px;">Попробуйте изменить параметры поиска</p>
+                {% else %}
+                    <p style="margin-top: 10px;">Пока нет ни одного рецепта</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+

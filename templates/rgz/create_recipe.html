@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block lab %}РГЗ - Создать рецепт{% endblock %}
+
+{% block main %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='rgz/rgz.css') }}">
+
+    <div class="rgz-form">
+        <h1>Создание рецепта</h1>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form action="/rgz/create_recipe" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Название рецепта:</label>
+                <input type="text" 
+                       id="title" 
+                       name="title" 
+                       maxlength="200" 
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="ingredients">Ингредиенты:</label>
+                <textarea id="ingredients" 
+                          name="ingredients" 
+                          rows="5" 
+                          required
+                          placeholder="Например: мука, яйца, сахар, молоко"></textarea>
+                <small>Перечислите все необходимые ингредиенты</small>
+            </div>
+
+            <div class="form-group">
+                <label for="instructions">Шаги приготовления:</label>
+                <textarea id="instructions" 
+                          name="instructions" 
+                          rows="8" 
+                          required
+                          placeholder="Опишите подробно процесс приготовления блюда"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Изображение блюда:</label>
+                <input type="file" 
+                       id="image" 
+                       name="image" 
+                       accept="image/*">
+                <small>Загрузите фото готового блюда (необязательно)</small>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="form-btn">Создать рецепт</button>
+                <a href="/rgz/recipes" class="btn-cancel">Отмена</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
