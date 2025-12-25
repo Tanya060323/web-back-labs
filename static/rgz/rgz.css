@@ -1,11 +1,9 @@
-/* Общие стили для РГЗ */
 .rgz-container {
-    max-width: 1400px; /* Увеличили ширину */
+    max-width: 1400px; 
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Шапка сайта */
 .site-header {
     display: flex;
     justify-content: space-between;
@@ -71,7 +69,6 @@
     background-color: #229954;
 }
 
-/* Поиск */
 .search-form {
     background: #f6f1ec;
     padding: 25px;
@@ -162,7 +159,6 @@
     background-color: #7f8c8d;
 }
 
-/* Заголовок списка рецептов */
 .recipes-header {
     margin-bottom: 25px;
 }
@@ -173,7 +169,6 @@
     margin: 0;
 }
 
-/* Список рецептов - ИЗМЕНЕНО: теперь в столбик */
 .recipes-list {
     display: flex;
     flex-direction: column;
@@ -293,9 +288,9 @@
     font-size: 18px;
 }
 
-/* Формы */
+
 .rgz-form {
-    max-width: 800px; /* Увеличили ширину формы */
+    max-width: 800px; 
     margin: 0 auto;
     background: #f9f9f9;
     padding: 30px;
@@ -368,8 +363,6 @@
 .form-btn:hover {
     background-color: #4ca6a1;
 }
-
-
 
 .form-buttons {
     display: flex;
